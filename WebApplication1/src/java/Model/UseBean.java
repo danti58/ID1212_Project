@@ -6,7 +6,11 @@
 package Model;
 
 public class UseBean {
+    
     public UseBean(String username,String password){
+        
+    }
+    /*
         DBHandler.createUser();
         DBHandler.deleteUser();
         DBHandler.updateAdmin();
@@ -14,7 +18,7 @@ public class UseBean {
         DBHandler.removeUserFromQueue();
         DBHandler.updateQueueStatus();
         DBHandler.authentication();
-    }
+    */
     
     
 }

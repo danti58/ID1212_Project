@@ -5,34 +5,96 @@
  */
 package Model;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.sql.DataSource;
+
 public class DBHandler {
 
-    static void createUser() {
+    public void createUser(String pin, String username, boolean admin, String password) {
+        String query = "INSERT INTO Users VALUES ('"+pin+"', '"+username+"', '"+admin+"','"+password+"')";
+        dbVoidCall(query);
+    }
+
+    public void deleteUser() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    static void deleteUser() {
+    public void updateAdmin(String pin, Integer id) {
+        String query = "INSERT INTO admins VALUES ('"+pin+"', "+id+" )";
+        dbVoidCall(query);
+    }
+
+    public void addUserToQueue() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    static void updateAdmin() {
+    public void removeUserFromQueue() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    static void addUserToQueue() {
+    public void updateQueueStatus() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    static void removeUserFromQueue() {
+    public void authentication() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+    public List<String> getAllUsers(){
+        List<String> list  = new ArrayList<String>();
+        
+        Statement stmt = null;
+        Connection conn = null;
+        
+        try{
+            Context initContext = new InitialContext();
+            Context envContext  = (Context)initContext.lookup("java:/comp/env");
 
-    static void updateQueueStatus() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            DataSource ds = (DataSource)envContext.lookup("jdbc/derby");
+            conn = ds.getConnection();
+            stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery("select * from users");
+            
+            while (rs.next()) {
+                list.add(rs.getString("USERNAME"));
+               
+            }
+            
+        }catch(Exception e){
+            e.printStackTrace();
+        } finally {
+            try {
+		stmt.close();
+		conn.close();
+            } catch (Exception e) {}
+        }
+        return list;
     }
+    private void dbVoidCall(String query){
+        Statement stmt = null;
+        Connection conn = null;
+        
+        try{
+            Context initContext = new InitialContext();
+            Context envContext  = (Context)initContext.lookup("java:/comp/env");
 
-    static void authentication() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            DataSource ds = (DataSource)envContext.lookup("jdbc/derby");
+            conn = ds.getConnection();
+            stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+  
+        }catch(Exception e){
+            e.printStackTrace();
+        } finally {
+            try {
+		stmt.close();
+		conn.close();
+            } catch (Exception e) {}
+        }
     }
-    
 }
