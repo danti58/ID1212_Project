@@ -26,20 +26,23 @@ public class DBHandler {
     }
 
     public void updateAdmin(String pin, Integer id) {
-        String query = "INSERT INTO admins VALUES ('"+pin+"', "+id+" )";
+        String query = "INSERT INTO Admins VALUES ('"+pin+"', "+id+" )";
         dbVoidCall(query);
     }
-
-    public void addUserToQueue() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    
+    //comment may be an empty string
+    public void addUserToQueue(String pin, Integer id, String location, String comment) {
+        String query = "INSERT INTO Users VALUES ('"+pin+"', "+id+", '"+location+"','"+comment+"')";
+        dbVoidCall(query);
     }
 
     public void removeUserFromQueue() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    public void updateQueueStatus() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void updateQueueStatus(Integer id, Boolean status) {
+        String query = "UPDATE Activity SET Status = '"+status+"' WHERE id="+id;
+        dbVoidCall(query);
     }
 
     public void authentication() {

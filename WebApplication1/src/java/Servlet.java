@@ -28,21 +28,7 @@ import javax.sql.DataSource;
 
 @WebServlet(name = "Servlet", urlPatterns = {"/Servlet"})
     public class Servlet extends HttpServlet {
-
-   
-
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     
-    //request.getParameter()to dread 
-    //request.getSession()
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws IOException{
@@ -89,9 +75,7 @@ import javax.sql.DataSource;
             out.print(e.getMessage());
        
         }
-        
-       
-        
+          
     }
     /*
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
