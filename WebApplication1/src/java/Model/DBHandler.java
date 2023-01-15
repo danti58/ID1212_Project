@@ -17,12 +17,13 @@ import javax.sql.DataSource;
 public class DBHandler {
 
     public void createUser(String pin, String username, boolean admin, String password) {
+        //If there is time add check for pin format here
         String query = "INSERT INTO Users VALUES ('"+pin+"', '"+username+"', '"+admin+"','"+password+"')";
         dbVoidCall(query);
     }
 
-    public void deleteUser() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void deleteUser(String pin) {
+        String query = "DELETE FROM Users WHERE Pin='"+pin+"'";
     }
 
     public void updateAdmin(String pin, Integer id) {
@@ -45,10 +46,16 @@ public class DBHandler {
         dbVoidCall(query);
     }
 
-    public void authentication() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void authentication(String pin, String password) {
+        //If there is time add hashing here
+        auth(pin, password);
     }
     public List<String> getAllUsers(){
+        String query = "select * from users";
+        return dbListCall(query, "users");
+    }
+    
+    public List<String> dbListCall(String query, String getObject){
         List<String> list  = new ArrayList<String>();
         
         Statement stmt = null;
@@ -61,11 +68,10 @@ public class DBHandler {
             DataSource ds = (DataSource)envContext.lookup("jdbc/derby");
             conn = ds.getConnection();
             stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery("select * from users");
+            ResultSet rs = stmt.executeQuery(query);
             
             while (rs.next()) {
-                list.add(rs.getString("USERNAME"));
-               
+                list.add(rs.getString(getObject));  
             }
             
         }catch(Exception e){
@@ -99,5 +105,38 @@ public class DBHandler {
 		conn.close();
             } catch (Exception e) {}
         }
+    }
+    
+    private Boolean auth(String username, String password){
+        Statement stmt = null;
+        Connection conn = null;
+        
+        try{
+            Context initContext = new InitialContext();
+            Context envContext  = (Context)initContext.lookup("java:/comp/env");
+
+            DataSource ds = (DataSource)envContext.lookup("jdbc/derby");
+            conn = ds.getConnection();
+            stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * from users WHERE Username='"+username+"'");
+            while (rs.next()) {
+                //Integer id = rs.getInt("id");
+                //if(this.username.equals(rs.getString("username")) && this.password.equals(rs.getString("password"))){
+                if(password.equals(rs.getString("password"))){
+                    //userId = id;
+                    rs.close();
+                    return true;
+                }
+            }
+            return false;
+        }catch(Exception e){
+
+        } finally {
+            try {
+		stmt.close();
+		conn.close();
+            } catch (Exception e) {}
+        }
+        return false;
     }
 }
