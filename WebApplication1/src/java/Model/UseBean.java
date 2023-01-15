@@ -22,8 +22,19 @@ public class UseBean {
         DBHandler.deleteUser(pin);
     }
 
-    public void updateAdmin(String pin, Integer id) {
-        DBHandler.updateAdmin(pin, id);
+    public void addAdmin(String pin, Integer id) {
+        DBHandler.addAdmin(pin, id);
+    }
+    
+    public void removeAdmin(String pin, Integer id) {
+        DBHandler.removeAdmin(pin, id);
+    }
+     public boolean isAdmin(String pin, Integer id) {
+        return DBHandler.isAdmin(pin, id);
+    }
+    
+    public User getUser(String pin){
+        return DBHandler.getUser(pin);
     }
     
     //comment may be an empty string
@@ -35,7 +46,7 @@ public class UseBean {
         DBHandler.removeUserFromQueue(pin, id);
     }
 
-    public void updateQueueStatus(Integer id, Boolean status) {
+    public void updateQueueStatus(Integer id, boolean status) {
         DBHandler.updateQueueStatus(id, status);
     }
 
@@ -45,7 +56,7 @@ public class UseBean {
     public void getAllUsers(){
         DBHandler.getAllUsers();
     }
-    public Boolean isUserInQueue(String pin){
+    public boolean isUserInQueue(String pin){
         return DBHandler.isUserInQueue(pin);
     }
 }

@@ -16,6 +16,38 @@ import javax.sql.DataSource;
 
 public class DBHandler {
 
+    public static User getUser(String pin) {
+        String query = "SELECT * FROM Users WHERE Pin='"+pin;
+        dbListCall(query, "");
+        User user = new User();
+        
+        Statement stmt = null;
+        Connection conn = null;
+        
+        try{
+            Context initContext = new InitialContext();
+            Context envContext  = (Context)initContext.lookup("java:/comp/env");
+
+            DataSource ds = (DataSource)envContext.lookup("jdbc/derby");
+            conn = ds.getConnection();
+            stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            
+            while (rs.next()) {
+                user = new User(pin, rs.getString("username"), rs.getBoolean("admin"), rs.getString("password"));
+            }
+            
+        }catch(Exception e){
+            e.printStackTrace();
+        } finally {
+            try {
+		stmt.close();
+		conn.close();
+            } catch (Exception e) {}
+        }
+        return user;
+    }
+
     public static void createUser(String pin, String username, boolean admin, String password) {
         //If there is time add check for pin format here
         String query = "INSERT INTO Users VALUES ('"+pin+"', '"+username+"', '"+admin+"','"+password+"')";
@@ -26,9 +58,19 @@ public class DBHandler {
         String query = "DELETE FROM Users WHERE Pin='"+pin+"'";
     }
 
-    public static void updateAdmin(String pin, Integer id) {
+    public static void addAdmin(String pin, Integer id) {
         String query = "INSERT INTO Admins VALUES ('"+pin+"', "+id+" )";
         dbVoidCall(query);
+    }
+    
+    public static void removeAdmin(String pin, Integer id) {
+        String query = "DELETE FROM Admins WHERE Pin = '"+pin+"' AND Activity_id="+id;
+        dbVoidCall(query);
+    }
+    
+    public static boolean isAdmin(String pin, Integer id) {
+        String query = "SELECT FROM Admins WHERE Pin = '"+pin+"' AND Activity_id="+id;
+        return dbFind(query);
     }
     
     //comment may be an empty string
@@ -41,12 +83,12 @@ public class DBHandler {
         String query = "DELETE FROM Queue WHERE Pin='"+pin+"' AND Activity_id="+id;
     }
 
-    public static void updateQueueStatus(Integer id, Boolean status) {
+    public static void updateQueueStatus(Integer id, boolean status) {
         String query = "UPDATE Activity SET Status = '"+status+"' WHERE id="+id;
         dbVoidCall(query);
     }
 
-    public static Boolean authentication(String pin, String password) {
+    public static boolean authentication(String pin, String password) {
         //If there is time add hashing here
         return dbFind("SELECT * from users WHERE Pin='"+pin+"' AND Password='"+password+"'");
     }
@@ -56,16 +98,16 @@ public class DBHandler {
         return dbListCall(query, "users");
     }
     
-    public static Boolean isUserInQueue(String pin){
+    public static boolean isUserInQueue(String pin){
         String query = "SELECT * from Queue WHERE Pin='"+pin+"'";
         return dbFind(query);
     }
-    public static Boolean findUser(String pin){
+    public static boolean findUser(String pin){
         String query = "SELECT * from Users WHERE Pin='"+pin+"'";
         return dbFind(query);
     }
     
-    private static Boolean dbFind(String query) {
+    private static boolean dbFind(String query) {
         
         Statement stmt = null;
         Connection conn = null;

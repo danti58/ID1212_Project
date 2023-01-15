@@ -9,6 +9,10 @@ public class User {
     private Boolean admin;
     private Boolean userIsInQueue;
     
+    public User(){
+    }
+    
+    
     public User(String pin, String username, Boolean admin, String password){
         this.pin = pin;
         this.username = username;
