@@ -18,7 +18,6 @@ public class DBHandler {
 
     public static User getUser(String pin) {
         String query = "SELECT * FROM Users WHERE Pin='"+pin;
-        dbListCall(query, "");
         User user = new User();
         
         Statement stmt = null;

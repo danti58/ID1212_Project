@@ -18,7 +18,6 @@ public class User {
         this.username = username;
         this.password = password;
         this.admin = admin;
-        this.userIsInQueue = false;
     }
     
     public String getPin(){
