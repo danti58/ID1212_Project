@@ -16,46 +16,74 @@ import javax.sql.DataSource;
 
 public class DBHandler {
 
-    public void createUser(String pin, String username, boolean admin, String password) {
+    public static void createUser(String pin, String username, boolean admin, String password) {
         //If there is time add check for pin format here
         String query = "INSERT INTO Users VALUES ('"+pin+"', '"+username+"', '"+admin+"','"+password+"')";
         dbVoidCall(query);
     }
 
-    public void deleteUser(String pin) {
+    public static void deleteUser(String pin) {
         String query = "DELETE FROM Users WHERE Pin='"+pin+"'";
     }
 
-    public void updateAdmin(String pin, Integer id) {
+    public static void updateAdmin(String pin, Integer id) {
         String query = "INSERT INTO Admins VALUES ('"+pin+"', "+id+" )";
         dbVoidCall(query);
     }
     
     //comment may be an empty string
-    public void addUserToQueue(String pin, Integer id, String location, String comment) {
+    public static void addUserToQueue(String pin, Integer id, String location, String comment) {
         String query = "INSERT INTO Users VALUES ('"+pin+"', "+id+", '"+location+"','"+comment+"')";
         dbVoidCall(query);
     }
 
-    public void removeUserFromQueue(String pin, Integer id) {
+    public static void removeUserFromQueue(String pin, Integer id) {
         String query = "DELETE FROM Queue WHERE Pin='"+pin+"' AND Activity_id="+id;
     }
 
-    public void updateQueueStatus(Integer id, Boolean status) {
+    public static void updateQueueStatus(Integer id, Boolean status) {
         String query = "UPDATE Activity SET Status = '"+status+"' WHERE id="+id;
         dbVoidCall(query);
     }
 
-    public void authentication(String pin, String password) {
+    public static void authentication(String pin, String password) {
         //If there is time add hashing here
         auth(pin, password);
     }
-    public List<String> getAllUsers(){
+    public static List<String> getAllUsers(){
         String query = "select * from users";
         return dbListCall(query, "users");
     }
     
-    private List<String> dbListCall(String query, String getObject){
+    static Boolean isUserInQueue(String pin) {
+        
+        Statement stmt = null;
+        Connection conn = null;
+        
+        try{
+            Context initContext = new InitialContext();
+            Context envContext  = (Context)initContext.lookup("java:/comp/env");
+
+            DataSource ds = (DataSource)envContext.lookup("jdbc/derby");
+            conn = ds.getConnection();
+            stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * from Queue WHERE Pin='"+pin+"'");
+            while (rs.next()) {
+                return true;
+            }
+            return false;
+        }catch(Exception e){
+
+        } finally {
+            try {
+		stmt.close();
+		conn.close();
+            } catch (Exception e) {}
+        }
+        return false;
+    }
+    
+    private static List<String> dbListCall(String query, String getObject){
         List<String> list  = new ArrayList<String>();
         
         Statement stmt = null;
@@ -84,7 +112,7 @@ public class DBHandler {
         }
         return list;
     }
-    private void dbVoidCall(String query){
+    private static void dbVoidCall(String query){
         Statement stmt = null;
         Connection conn = null;
         
@@ -107,7 +135,7 @@ public class DBHandler {
         }
     }
     
-    private Boolean auth(String username, String password){
+    private static Boolean auth(String username, String password){
         Statement stmt = null;
         Connection conn = null;
         
@@ -139,4 +167,6 @@ public class DBHandler {
         }
         return false;
     }
+
+    
 }
