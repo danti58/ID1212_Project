@@ -10,17 +10,12 @@ public class UseBean {
     public UseBean(String username,String password){
         
     }
-    /*
-        DBHandler.createUser();
-        DBHandler.deleteUser();
-        DBHandler.updateAdmin();
-        DBHandler.addUserToQueue();
-        DBHandler.removeUserFromQueue();
-        DBHandler.updateQueueStatus();
-        DBHandler.authentication();
-    */
+   
     public void createUser(String pin, String username, boolean admin, String password) {
         DBHandler.createUser(pin, username, admin, password);
+        if(DBHandler.findUser(pin)){
+            User user = new User(pin, username, admin, password);
+        }
     }
 
     public void deleteUser(String pin) {

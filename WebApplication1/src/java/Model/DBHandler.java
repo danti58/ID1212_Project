@@ -46,16 +46,26 @@ public class DBHandler {
         dbVoidCall(query);
     }
 
-    public static void authentication(String pin, String password) {
+    public static Boolean authentication(String pin, String password) {
         //If there is time add hashing here
-        auth(pin, password);
+        return dbFind("SELECT * from users WHERE Pin='"+pin+"' AND Password='"+password+"'");
     }
+    
     public static List<String> getAllUsers(){
         String query = "select * from users";
         return dbListCall(query, "users");
     }
     
-    static Boolean isUserInQueue(String pin) {
+    public static Boolean isUserInQueue(String pin){
+        String query = "SELECT * from Queue WHERE Pin='"+pin+"'";
+        return dbFind(query);
+    }
+    public static Boolean findUser(String pin){
+        String query = "SELECT * from Users WHERE Pin='"+pin+"'";
+        return dbFind(query);
+    }
+    
+    private static Boolean dbFind(String query) {
         
         Statement stmt = null;
         Connection conn = null;
@@ -67,7 +77,7 @@ public class DBHandler {
             DataSource ds = (DataSource)envContext.lookup("jdbc/derby");
             conn = ds.getConnection();
             stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * from Queue WHERE Pin='"+pin+"'");
+            ResultSet rs = stmt.executeQuery(query);
             while (rs.next()) {
                 return true;
             }
@@ -133,40 +143,5 @@ public class DBHandler {
 		conn.close();
             } catch (Exception e) {}
         }
-    }
-    
-    private static Boolean auth(String username, String password){
-        Statement stmt = null;
-        Connection conn = null;
-        
-        try{
-            Context initContext = new InitialContext();
-            Context envContext  = (Context)initContext.lookup("java:/comp/env");
-
-            DataSource ds = (DataSource)envContext.lookup("jdbc/derby");
-            conn = ds.getConnection();
-            stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * from users WHERE Username='"+username+"'");
-            while (rs.next()) {
-                //Integer id = rs.getInt("id");
-                //if(this.username.equals(rs.getString("username")) && this.password.equals(rs.getString("password"))){
-                if(password.equals(rs.getString("password"))){
-                    //userId = id;
-                    rs.close();
-                    return true;
-                }
-            }
-            return false;
-        }catch(Exception e){
-
-        } finally {
-            try {
-		stmt.close();
-		conn.close();
-            } catch (Exception e) {}
-        }
-        return false;
-    }
-
-    
+    }    
 }
