@@ -37,8 +37,8 @@ public class DBHandler {
         dbVoidCall(query);
     }
 
-    public void removeUserFromQueue() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void removeUserFromQueue(String pin, Integer id) {
+        String query = "DELETE FROM Queue WHERE Pin='"+pin+"' AND Activity_id="+id;
     }
 
     public void updateQueueStatus(Integer id, Boolean status) {
@@ -55,7 +55,7 @@ public class DBHandler {
         return dbListCall(query, "users");
     }
     
-    public List<String> dbListCall(String query, String getObject){
+    private List<String> dbListCall(String query, String getObject){
         List<String> list  = new ArrayList<String>();
         
         Statement stmt = null;
