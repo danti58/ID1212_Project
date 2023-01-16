@@ -13,22 +13,28 @@
         <title>Set Admin</title>
     </head>
     <body>
-        
-        <input type='submit' value='Logout' name='signOut' />
-        <input type='submit' value='Delete account' name='deleteUser' />
+        <form>
+            <input type='submit' value='Logout' name='signOut' />
+            <input type='submit' value='Delete account' name='deleteUser' />
+            <input type='submit' value='Select Activity' name='allActivites' />
+        </form>
         <%
-            if(ub.getCurrentUser().getAdmin()){
+            /*if(ub.getCurrentUser().getAdmin()){
                 out.print("<input type='submit' value='Set Admin' name='setAdmin' />");
                 out.print("<input type='submit' value='Delete Admin' name='removeAdmin' />");
-            }
+            }*/
         %>
-        <h1>brah</h1>
+        <h1>Set Admin</h1>
         <form>
             <%
                 //Query funkar inte
                 for(int i = 0; i < ub.getAllUsers().size(); i++){
-                    if(!ub.isAdmin(ub.getUserPIN(ub.getAllUsers().get(i)))){
-                        out.print("<p>" + ub.getAllUsers().get(i) + "</p>");
+                    if(ub.isAdmin(ub.getAllUsers().get(i).getPin())){
+                        out.print(request.getParameter("setAdmin"));
+                        out.print(ub.getAllUsers().get(i).getPin());
+                        if(!ub.isAdminInQueue(ub.getAllUsers().get(i).getPin(), Integer.parseInt(request.getParameter("setAdmin")))){
+                            out.print("<p>" + ub.getAllUsers().get(i).getUsername() + "<input type='submit' value='" + ub.getAllUsers().get(i).getPin() + "-" + request.getParameter("setAdmin") +"' name='setAdminResult' />");
+                        }
                     }
                 }
             %>

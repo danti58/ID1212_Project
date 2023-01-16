@@ -13,19 +13,23 @@
         <title>Queue</title>
     </head>
     <body>
-        
-        <input type='submit' value='Logout' name='signOut' />
-        <input type='submit' value='Delete account' name='deleteUser' />
+        <form>
+            <input type='submit' value='Logout' name='signOut' />
+            <input type='submit' value='Delete account' name='deleteUser' />
+            <input type='submit' value='Select Activity' name='allActivites' />
+        </form>
+        <form>
         <%
             //Borde vara rätt kod för att uppdatera, kanske borde vara i servlet
             //response.setHeader("Refresh", "0; URL=http://your-current-page");
             
             if(ub.getCurrentUser().getAdmin()){
-                out.print("<input type='submit' value='Set Admin' name='setAdmin' />");
-                out.print("<input type='submit' value='Delete Admin' name='removeAdmin' />");
-                out.print("<input type='submit' value='Message-" + request.getParameter("openQueue") +"' name='Message' />");
+                out.print("<p>SetAdmin<input type='submit' value='"+ request.getParameter("openQueue") + "' name='setAdmin' />");
+                out.print("<p>deleteAdmin<input type='submit' value='"+ request.getParameter("openQueue") + "' name='removeAdmin' />");
+                out.print("<p>Message<input type='submit' value='" + request.getParameter("openQueue") +"' name='Message' />");
             }
         %>
+        </form>
         <h1>Hello World!</h1>
         
         <%
@@ -48,7 +52,9 @@
         
         
             <%
-                out.print("<form><input type='text' name='comment'><input type='submit' value='" + request.getParameter("openQueue") + "' name='addToQueue' /></form>");
+                out.print("<p>Join queue</p>");
+                out.print("<form><input type='text' name='comment' placeholder='Write comment here'><input type='submit' value='" + request.getParameter("openQueue") + "' name='addToQueue' /></form>");
+                out.print("<p>Leave queue</p>");
                 out.print("<form><input type='submit' value='" + request.getParameter("openQueue") + "' name='removeFromQueue' /></form>");
             %>
         

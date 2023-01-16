@@ -29,7 +29,7 @@
             <%
                 
                 for(int i = 0; i < ub.getAllActivities().size();i++){
-                    out.print("<input type='submit' value='" +  ub.getAllActivities().get(i) + "' name='openQueue' />");
+                    out.print("<p>" + ub.getAllActivities().get(i).getName() + "<input type='submit' value='" +  ub.getAllActivities().get(i).getId() + "' name='openQueue' />");
                     
                 }
             %>

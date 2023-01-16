@@ -65,8 +65,11 @@ public class UseBean {
     public void removeAdmin(String pin, Integer id) {
         DBHandler.removeAdmin(pin, id);
     }
-     public boolean isAdmin(String pin /*, Integer id*/) {
+    public boolean isAdmin(String pin /*, Integer id*/) {
         return DBHandler.isAdmin(pin /*, id*/);
+    }
+    public boolean isAdminInQueue(String pin, Integer id){
+        return DBHandler.isAdminInQueue(pin, id);
     }
     
     /*public User getUser(String pin){
@@ -97,17 +100,25 @@ public class UseBean {
     public boolean authentication(String pin, String password) {
         return DBHandler.authentication(pin, password);
     }
-    public List<String> getAllUsers(){
+    public List<User> getAllUsers(){
         return DBHandler.getAllUsers();
     }
     public boolean isUserInQueue(String pin){
         return DBHandler.isUserInQueue(pin);
     }
     
-    public List<String> getAllActivities(){
+    /*public List<String> getAllActivities(){
+        return DBHandler.getAllActivities();
+    }*/
+    
+    public List<Activity> getAllActivities(){
         return DBHandler.getAllActivities();
     }
-    public List<String> getAllQueues(Integer activityID){
+    
+    /*public List<String> getAllQueues(Integer activityID){
+        return DBHandler.getAllQueues(activityID);
+    }*/
+    public List<QueueSpot> getAllQueues(Integer activityID){
         return DBHandler.getAllQueues(activityID);
     }
 }

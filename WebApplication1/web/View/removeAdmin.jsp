@@ -16,6 +16,7 @@
         <form>
             <input type='submit' value='Logout' name='signOut' />
             <input type='submit' value='Delete account' name='deleteUser' />
+            <input type='submit' value='Select Activity' name='allActivites' />
             <%
                 if(ub.getCurrentUser().getAdmin()){
                     out.print("<input type='submit' value='Set Admin' name='setAdmin' />");
@@ -27,8 +28,8 @@
             <%
                 
                 for(int i = 0; i < ub.getAllUsers().size(); i++){
-                    if(ub.isAdmin(ub.getUserPIN(ub.getAllUsers().get(i)))){
-                        out.print("<p>" + ub.getAllUsers().get(i) + "</p>");
+                    if(ub.isAdminInQueue(ub.getAllUsers().get(i).getPin(), Integer.parseInt(request.getParameter("removeAdmin")))){
+                        out.print("<p>" + ub.getAllUsers().get(i).getUsername() + "<input type='submit' value='" + ub.getAllUsers().get(i).getPin() + "-" + request.getParameter("removeAdmin") + "' name='removeAdminResult' />");
                     }
                 }
             %>

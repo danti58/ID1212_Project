@@ -98,7 +98,25 @@ public class Servlet extends HttpServlet {
             }else if(request.getParameter("setAdmin") != null){ 
                 RequestDispatcher rd = request.getRequestDispatcher("View/setAdmin.jsp");
                 rd.forward(request, response); 
+            }else if(request.getParameter("setAdminResult") != null){ 
+                
+                //Set admin
+                
+                String[] res = request.getParameter("setAdminResult").split("-");
+                
+                ub.addAdmin(res[0], Integer.parseInt(res[1]));
+                
+                RequestDispatcher rd = request.getRequestDispatcher("View/setAdmin.jsp");
+                rd.forward(request, response); 
             }else if(request.getParameter("removeAdmin") != null){
+                RequestDispatcher rd = request.getRequestDispatcher("View/removeAdmin.jsp");
+                rd.forward(request, response);  
+            }else if(request.getParameter("removeAdminResult") != null){
+                
+                String[] res = request.getParameter("removeAdminResult").split("-");
+                
+                ub.removeAdmin(res[0], Integer.parseInt(res[1]));
+                
                 RequestDispatcher rd = request.getRequestDispatcher("View/removeAdmin.jsp");
                 rd.forward(request, response);  
             }else if(request.getParameter("addToQueue") != null){
@@ -116,6 +134,9 @@ public class Servlet extends HttpServlet {
             }else if(request.getParameter("openQueue") != null){
                 RequestDispatcher rd = request.getRequestDispatcher("View/queue.jsp");
                 rd.forward(request, response);  
+            } else if(request.getParameter("allActivites") != null) {
+                RequestDispatcher rd = request.getRequestDispatcher("View/allActivites.jsp");
+                rd.forward(request, response);
             }else {
                 RequestDispatcher rd = request.getRequestDispatcher("View/allActivites.jsp");
                 rd.forward(request, response); 

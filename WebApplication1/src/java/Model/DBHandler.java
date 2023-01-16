@@ -108,6 +108,11 @@ public class DBHandler {
         return dbFind(query);
     }
     
+    public static boolean isAdminInQueue(String pin , Integer id) {
+        String query = "SELECT * FROM Admins WHERE Pin = '"+pin+"' AND Activity_id="+id;
+        return dbFind(query);
+    }
+    
     //comment may be an empty string
     public static void addUserToQueue(String pin, Integer id, String location, String comment) {
         String query = "INSERT INTO Users VALUES ('"+pin+"', "+id+", '"+location+"','"+comment+"')";
@@ -116,6 +121,7 @@ public class DBHandler {
 
     public static void removeUserFromQueue(String pin, Integer id) {
         String query = "DELETE FROM Queue WHERE Pin='"+pin+"' AND Activity_id="+id;
+        dbVoidCall(query);
     }
 
     public static void updateQueueStatus(Integer id, boolean status) {
@@ -128,17 +134,28 @@ public class DBHandler {
         return dbFind("SELECT * from users WHERE Pin='"+pin+"' AND Password='"+password+"'");
     }
     
-    public static List<String> getAllUsers(){
+    public static List<User> getAllUsers(){
         String query = "select * from users";
-        return dbListCall(query, "userName");
+        return dbUser(query);
     }
-    public static List<String> getAllActivities(){
+    
+    public static List<Activity> getAllActivities(){
+        String query = "select * from activity";
+        return dbActivity(query);
+    }
+
+    /*public static List<String> getAllActivities(){
         String query = "select * from activity";
         return dbListCall(query, "name");
-    }
-    public static List<String> getAllQueues(Integer id){
+    }*/
+    /*public static List<String> getAllQueues(Integer id){
         String query = "select Queue.id,Activity_id,Queue.pin from Queue INNER JOIN users ON Queue.pin=Users.pin WHERE queue.Activity_id="+id+" ORDER BY id ASC";
         return dbListCall(query, "username");
+    }*/
+    
+        public static List<QueueSpot> getAllQueues(Integer id){
+        String query = "select Queue.id,Activity_id,Queue.pin from Queue INNER JOIN users ON Queue.pin=Users.pin WHERE queue.Activity_id="+id+" ORDER BY id ASC";
+        return dbQueueSpot(query);
     }
     
     public static boolean isUserInQueue(String pin){
@@ -228,5 +245,101 @@ public class DBHandler {
 		conn.close();
             } catch (Exception e) {}
         }
-    }    
+    }
+
+    private static List <User> dbUser(String query){
+         List<User> list  = new ArrayList<User>();
+        User user = new User();
+        
+        Statement stmt = null;
+        Connection conn = null;
+        
+        try{
+            Context initContext = new InitialContext();
+            Context envContext  = (Context)initContext.lookup("java:/comp/env");
+
+            DataSource ds = (DataSource)envContext.lookup("jdbc/derby");
+            conn = ds.getConnection();
+            stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            
+            while (rs.next()) {
+                user = new User(rs.getString("pin"), rs.getString("username"), rs.getBoolean("admin"), rs.getString("password"));
+                list.add(user);
+            }
+            
+        }catch(Exception e){
+            e.printStackTrace();
+        } finally {
+            try {
+		stmt.close();
+		conn.close();
+            } catch (Exception e) {}
+        }
+        return list;
+    }
+    
+     private static List <QueueSpot> dbQueueSpot(String query){
+         List<QueueSpot> list  = new ArrayList<QueueSpot>();
+        QueueSpot qs = new QueueSpot();
+        
+        Statement stmt = null;
+        Connection conn = null;
+        
+        try{
+            Context initContext = new InitialContext();
+            Context envContext  = (Context)initContext.lookup("java:/comp/env");
+
+            DataSource ds = (DataSource)envContext.lookup("jdbc/derby");
+            conn = ds.getConnection();
+            stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            
+            while (rs.next()) {
+                qs = new QueueSpot(rs.getString("pin"), rs.getInt("activity_id"), rs.getString("location"), rs.getString("comment"));
+                list.add(qs);
+            }
+            
+        }catch(Exception e){
+            e.printStackTrace();
+        } finally {
+            try {
+		stmt.close();
+		conn.close();
+            } catch (Exception e) {}
+        }
+        return list;
+    }
+     
+     private static List<Activity> dbActivity(String query){
+        List<Activity> list  = new ArrayList<Activity>();
+        Activity a = new Activity();
+        
+        Statement stmt = null;
+        Connection conn = null;
+        
+        try{
+            Context initContext = new InitialContext();
+            Context envContext  = (Context)initContext.lookup("java:/comp/env");
+
+            DataSource ds = (DataSource)envContext.lookup("jdbc/derby");
+            conn = ds.getConnection();
+            stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            
+            while (rs.next()) {
+                a = new Activity(rs.getInt("id"), rs.getString("name"), rs.getBoolean("status"));
+                list.add(a);  
+            }
+            
+        }catch(Exception e){
+            e.printStackTrace();
+        } finally {
+            try {
+		stmt.close();
+		conn.close();
+            } catch (Exception e) {}
+        }
+        return list;
+    }
 }
