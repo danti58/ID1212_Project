@@ -83,8 +83,10 @@ public class DBHandler {
     }
 
     public static void updateQueueStatus(Integer id, boolean status) {
-        String query = "UPDATE Activity SET Status = '"+status+"' WHERE id="+id;
-        dbVoidCall(query);
+        //rs.updateDouble( "age", newAge ); rs.updateRow();
+        String query = "SELECT * Activity WHERE id="+id;
+        dbUpdate(query, id, "status", status);
+        
     }
 
     public static boolean authentication(String pin, String password) {
@@ -192,5 +194,38 @@ public class DBHandler {
 		conn.close();
             } catch (Exception e) {}
         }
-    }    
+    }   
+    private static void dbUpdate(String query, Integer id, String update, boolean value){
+       
+        
+        Statement stmt = null;
+        Connection conn = null;
+        
+        try{
+            Context initContext = new InitialContext();
+            Context envContext  = (Context)initContext.lookup("java:/comp/env");
+
+            DataSource ds = (DataSource)envContext.lookup("jdbc/derby");
+            conn = ds.getConnection();
+            stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            
+            while(rs.next()) {
+                if(rs.getInt("ID")== id) {
+                   //Updating
+                   rs.updateBoolean(update, value);
+                   //Updating the row
+                   rs.updateRow();
+                }
+            }
+            
+        }catch(Exception e){
+            e.printStackTrace();
+        } finally {
+            try {
+		stmt.close();
+		conn.close();
+            } catch (Exception e) {}
+        }
+    }
 }
