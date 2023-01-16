@@ -101,8 +101,8 @@ public class DBHandler {
         return dbListCall(query, "name");
     }
     public static List<String> getAllQueues(Integer id){
-        String query = "select * from Queue WHERE Activity_id="+id+" ORDER BY id ASC";
-        return dbListCall(query, "");
+        String query = "select Queue.id,Activity_id,Queue.pin from Queue INNER JOIN users ON Queue.pin=Users.pin WHERE queue.Activity_id="+id+" ORDER BY id ASC";
+        return dbListCall(query, "username");
     }
     
     public static boolean isUserInQueue(String pin){
