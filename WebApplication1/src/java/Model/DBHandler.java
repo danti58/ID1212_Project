@@ -96,6 +96,14 @@ public class DBHandler {
         String query = "select * from users";
         return dbListCall(query, "users");
     }
+    public static List<String> getAllActivities(){
+        String query = "select * from activity";
+        return dbListCall(query, "name");
+    }
+    public static List<String> getAllQueues(Integer id){
+        String query = "select * from Queue WHERE Activity_id="+id+" ORDER BY id ASC";
+        return dbListCall(query, "");
+    }
     
     public static boolean isUserInQueue(String pin){
         String query = "SELECT * from Queue WHERE Pin='"+pin+"'";

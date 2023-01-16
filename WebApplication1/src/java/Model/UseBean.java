@@ -13,11 +13,15 @@ public class UseBean {
         
     }
    
-    public void createUser(String pin, String username, boolean admin, String password) {
-        DBHandler.createUser(pin, username, admin, password);
-        if(DBHandler.findUser(pin)){
-            User user = new User(pin, username, admin, password);
+    public User createUser(String pin, String username, boolean admin, String password) {
+        User user = new User();
+        if(!DBHandler.findUser(pin)){
+            DBHandler.createUser(pin, username, admin, password);
         }
+        if(DBHandler.findUser(pin)){
+            user = new User(pin, username, admin, password);
+        }
+        return user;
     }
 
     public void deleteUser(String pin) {
@@ -60,5 +64,12 @@ public class UseBean {
     }
     public boolean isUserInQueue(String pin){
         return DBHandler.isUserInQueue(pin);
+    }
+    
+    public List<String> getAllActivities(){
+        return DBHandler.getAllActivities();
+    }
+    public List<String> getAllQueues(Integer activityID){
+        return DBHandler.getAllQueues(activityID);
     }
 }

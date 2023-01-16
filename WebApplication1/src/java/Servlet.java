@@ -44,7 +44,7 @@ import javax.sql.DataSource;
             if(request.getParameter("username") != null){
                 String username = request.getParameter("username");
                 String password = request.getParameter("password");
-                session.setAttribute("ub", new UseBean(username,password));
+                //session.setAttribute("ub", new UseBean(username,password));
             }
 
             UseBean ub = (UseBean)session.getAttribute("ub");
