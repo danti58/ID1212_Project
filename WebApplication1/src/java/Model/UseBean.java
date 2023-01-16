@@ -5,9 +5,11 @@
  */
 package Model;
 
+import java.util.List;
+
 public class UseBean {
     
-    public UseBean(String username,String password){
+    public UseBean(){
         
     }
    
@@ -50,11 +52,11 @@ public class UseBean {
         DBHandler.updateQueueStatus(id, status);
     }
 
-    public void authentication(String pin, String password) {
-        DBHandler.authentication(pin, password);
+    public boolean authentication(String pin, String password) {
+        return DBHandler.authentication(pin, password);
     }
-    public void getAllUsers(){
-        DBHandler.getAllUsers();
+    public List<String> getAllUsers(){
+        return DBHandler.getAllUsers();
     }
     public boolean isUserInQueue(String pin){
         return DBHandler.isUserInQueue(pin);
