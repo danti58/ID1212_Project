@@ -93,9 +93,9 @@ public class DBHandler {
         return dbFind("SELECT * from users WHERE Pin='"+pin+"' AND Password='"+password+"'");
     }
     
-    public static List<String> getAllUsers(){
+    public static List<User> getAllUsers(){
         String query = "select * from users";
-        return dbListCall(query, "users");
+        return dbUser(query);
     }
     public static List<String> getAllActivities(){
         String query = "select * from activity";
@@ -226,5 +226,36 @@ public class DBHandler {
 		conn.close();
             } catch (Exception e) {}
         }
+    }
+    private static List <User> dbUser(String query){
+         List<User> list  = new ArrayList<User>();
+        User user = new User();
+        
+        Statement stmt = null;
+        Connection conn = null;
+        
+        try{
+            Context initContext = new InitialContext();
+            Context envContext  = (Context)initContext.lookup("java:/comp/env");
+
+            DataSource ds = (DataSource)envContext.lookup("jdbc/derby");
+            conn = ds.getConnection();
+            stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            
+            while (rs.next()) {
+                user = new User(rs.getString("pin"), rs.getString("username"), rs.getBoolean("admin"), rs.getString("password"));
+                list.add(user);
+            }
+            
+        }catch(Exception e){
+            e.printStackTrace();
+        } finally {
+            try {
+		stmt.close();
+		conn.close();
+            } catch (Exception e) {}
+        }
+        return list;
     }
 }

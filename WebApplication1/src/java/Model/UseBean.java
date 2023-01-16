@@ -59,7 +59,7 @@ public class UseBean {
     public boolean authentication(String pin, String password) {
         return DBHandler.authentication(pin, password);
     }
-    public List<String> getAllUsers(){
+    public List<User> getAllUsers(){
         return DBHandler.getAllUsers();
     }
     public boolean isUserInQueue(String pin){
