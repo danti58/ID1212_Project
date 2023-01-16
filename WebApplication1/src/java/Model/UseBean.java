@@ -5,16 +5,109 @@
  */
 package Model;
 
+import java.util.List;
+
 public class UseBean {
-    public UseBean(String username,String password){
-        DBHandler.createUser();
-        DBHandler.deleteUser();
-        DBHandler.updateAdmin();
-        DBHandler.addUserToQueue();
-        DBHandler.removeUserFromQueue();
-        DBHandler.updateQueueStatus();
-        DBHandler.authentication();
+    
+    User user;
+    
+    public UseBean(){
+        
+    }
+    /*public UseBean(String PIN,String password){
+        if(authentication(PIN, password)){
+            this.user = DBHandler.getUser(PIN);
+        }
+    }
+   
+    public UseBean(String pin, String username, boolean admin, String password) {
+        
+        if(!DBHandler.findUser(pin)){
+            DBHandler.createUser(pin, username, admin, password);
+            if(DBHandler.findUser(pin)){
+                this.user = new User(pin, username, admin, password); 
+            }
+        }
+    }*/
+    
+    public boolean login(String PIN, String password){
+        boolean success = false;
+        if(authentication(PIN, password)){
+            this.user = DBHandler.getUser(PIN);
+            success = true;
+        }
+        
+        return success;
     }
     
+    public boolean createUser(String pin, String username, boolean admin, String password){
+        boolean success = false;
+        
+        if(!DBHandler.findUser(pin)){
+            DBHandler.createUser(pin, username, admin, password);
+            if(DBHandler.findUser(pin)){
+                this.user = new User(pin, username, admin, password); 
+                success = true;
+            }
+        }
+        
+        return success;
+    }
+
+    public void deleteUser(String pin) {
+        DBHandler.deleteUser(pin);
+    }
+
+    public void addAdmin(String pin, Integer id) {
+        DBHandler.addAdmin(pin, id);
+    }
     
+    public void removeAdmin(String pin, Integer id) {
+        DBHandler.removeAdmin(pin, id);
+    }
+     public boolean isAdmin(String pin /*, Integer id*/) {
+        return DBHandler.isAdmin(pin /*, id*/);
+    }
+    
+    /*public User getUser(String pin){
+        return DBHandler.getUser(pin);
+    }*/
+     
+    public String getUserPIN(String userName){
+        return DBHandler.getUserPin(userName);
+    }
+     
+     public User getCurrentUser(){
+        return this.user;
+    }
+    
+    //comment may be an empty string
+    public void addUserToQueue(String pin, Integer id, String location, String comment) {
+        DBHandler.addUserToQueue(pin, id, location, comment);
+    }
+
+    public void removeUserFromQueue(String pin, Integer id) {
+        DBHandler.removeUserFromQueue(pin, id);
+    }
+
+    public void updateQueueStatus(Integer id, boolean status) {
+        DBHandler.updateQueueStatus(id, status);
+    }
+
+    public boolean authentication(String pin, String password) {
+        return DBHandler.authentication(pin, password);
+    }
+    public List<String> getAllUsers(){
+        return DBHandler.getAllUsers();
+    }
+    public boolean isUserInQueue(String pin){
+        return DBHandler.isUserInQueue(pin);
+    }
+    
+    public List<String> getAllActivities(){
+        return DBHandler.getAllActivities();
+    }
+    public List<String> getAllQueues(Integer activityID){
+        return DBHandler.getAllQueues(activityID);
+    }
 }

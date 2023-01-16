@@ -1,6 +1,6 @@
 <%-- 
-    Document   : allActivites
-    Created on : 2023-jan-13, 22:39:58
+    Document   : removeAdmin
+    Created on : 2023-jan-16, 04:45:54
     Author     : Dante
 --%>
 
@@ -10,7 +10,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Activity Selector</title>
+        <title>Remove Admin</title>
     </head>
     <body>
         <form>
@@ -22,15 +22,14 @@
                     out.print("<input type='submit' value='Delete Admin' name='removeAdmin' />");
                 }
             %>
-        </form>
-        <h1>Hello World!</h1>
-        
-        <form>
+            
+            
             <%
                 
-                for(int i = 0; i < ub.getAllActivities().size();i++){
-                    out.print("<input type='submit' value='" +  ub.getAllActivities().get(i) + "' name='openQueue' />");
-                    
+                for(int i = 0; i < ub.getAllUsers().size(); i++){
+                    if(ub.isAdmin(ub.getUserPIN(ub.getAllUsers().get(i)))){
+                        out.print("<p>" + ub.getAllUsers().get(i) + "</p>");
+                    }
                 }
             %>
         </form>
