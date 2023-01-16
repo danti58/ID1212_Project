@@ -66,7 +66,7 @@ public class UseBean {
         return DBHandler.isUserInQueue(pin);
     }
     
-    public List<String> getAllActivities(){
+    public List<Activity> getAllActivities(){
         return DBHandler.getAllActivities();
     }
     public List<QueueSpot> getAllQueues(Integer activityID){

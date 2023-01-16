@@ -97,9 +97,9 @@ public class DBHandler {
         String query = "select * from users";
         return dbUser(query);
     }
-    public static List<String> getAllActivities(){
+    public static List<Activity> getAllActivities(){
         String query = "select * from activity";
-        return dbListCall(query, "name");
+        return dbActivity(query);
     }
     public static List<QueueSpot> getAllQueues(Integer id){
         String query = "select Queue.id,Activity_id,Queue.pin from Queue INNER JOIN users ON Queue.pin=Users.pin WHERE queue.Activity_id="+id+" ORDER BY id ASC";
@@ -143,8 +143,9 @@ public class DBHandler {
         return false;
     }
     
-    private static List<String> dbListCall(String query, String getObject){
-        List<String> list  = new ArrayList<String>();
+    private static List<Activity> dbActivity(String query){
+        List<Activity> list  = new ArrayList<Activity>();
+        Activity a = new Activity();
         
         Statement stmt = null;
         Connection conn = null;
@@ -159,7 +160,8 @@ public class DBHandler {
             ResultSet rs = stmt.executeQuery(query);
             
             while (rs.next()) {
-                list.add(rs.getString(getObject));  
+                a = new Activity(rs.getInt("id"), rs.getString("name"), rs.getBoolean("status"));
+                list.add(a);  
             }
             
         }catch(Exception e){
