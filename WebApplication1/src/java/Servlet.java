@@ -106,7 +106,7 @@ public class Servlet extends HttpServlet {
                 
                 ub.addAdmin(res[0], Integer.parseInt(res[1]));
                 
-                RequestDispatcher rd = request.getRequestDispatcher("View/setAdmin.jsp");
+                RequestDispatcher rd = request.getRequestDispatcher("View/allActivites.jsp");
                 rd.forward(request, response); 
             }else if(request.getParameter("removeAdmin") != null){
                 RequestDispatcher rd = request.getRequestDispatcher("View/removeAdmin.jsp");
@@ -117,7 +117,7 @@ public class Servlet extends HttpServlet {
                 
                 ub.removeAdmin(res[0], Integer.parseInt(res[1]));
                 
-                RequestDispatcher rd = request.getRequestDispatcher("View/removeAdmin.jsp");
+                RequestDispatcher rd = request.getRequestDispatcher("View/allActivites.jsp");
                 rd.forward(request, response);  
             }else if(request.getParameter("addToQueue") != null){
                 
