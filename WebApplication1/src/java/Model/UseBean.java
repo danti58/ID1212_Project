@@ -69,7 +69,7 @@ public class UseBean {
     public List<String> getAllActivities(){
         return DBHandler.getAllActivities();
     }
-    public List<String> getAllQueues(Integer activityID){
+    public List<QueueSpot> getAllQueues(Integer activityID){
         return DBHandler.getAllQueues(activityID);
     }
 }
