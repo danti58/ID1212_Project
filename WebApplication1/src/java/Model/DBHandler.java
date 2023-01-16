@@ -83,7 +83,6 @@ public class DBHandler {
     }
 
     public static void updateQueueStatus(Integer id, boolean status) {
-        //rs.updateDouble( "age", newAge ); rs.updateRow();
         String query = "SELECT * Activity WHERE id="+id;
         dbUpdate(query, id, "status", status);
         
