@@ -21,7 +21,9 @@
         <form>
         <%
             //Borde vara rätt kod för att uppdatera, kanske borde vara i servlet
-            //response.setHeader("Refresh", "0; URL=http://your-current-page");
+            //response.setHeader("Refresh", "0; URL=request.getContextPath()");
+            
+            //response.setHeader("Refresh", "3; URL=request.getContextPath()");
             
             if(ub.getCurrentUser().getAdmin()){
                 out.print("<p>SetAdmin<input type='submit' value='"+ request.getParameter("openQueue") + "' name='setAdmin' />");
@@ -33,7 +35,15 @@
         <h1>Hello World!</h1>
         
         <%
-            for(int i = 0; i < ub.getAllUsers().size(); i++){
+            for(int i = 0; i < ub.getAllQueues(Integer.parseInt(request.getParameter("openQueue"))).size(); i++){
+                
+                if(ub.getAllQueues(Integer.parseInt(request.getParameter("openQueue"))).get(i).getPin().equals(ub.getCurrentUser().getPin())){
+                    out.print("<h1>" + ub.getUser(ub.getAllQueues(Integer.parseInt(request.getParameter("openQueue"))).get(i).getPin()).getUsername() + " " + ub.getAllQueues(Integer.parseInt(request.getParameter("openQueue"))).get(i).getComment() + "</h1>");
+                    
+                }
+                else {
+                    out.print("<p>" + ub.getUser(ub.getAllQueues(Integer.parseInt(request.getParameter("openQueue"))).get(i).getPin()).getUsername() + " " + ub.getAllQueues(Integer.parseInt(request.getParameter("openQueue"))).get(i).getComment() +  "</p>");
+                }
                 
                 //Funkar inte med PIN vs username
                 /*
@@ -52,10 +62,14 @@
         
         
             <%
-                out.print("<p>Join queue</p>");
-                out.print("<form><input type='text' name='comment' placeholder='Write comment here'><input type='submit' value='" + request.getParameter("openQueue") + "' name='addToQueue' /></form>");
-                out.print("<p>Leave queue</p>");
-                out.print("<form><input type='submit' value='" + request.getParameter("openQueue") + "' name='removeFromQueue' /></form>");
+                if(!ub.getCurrentUser().getUserIsInQueue()){
+                    out.print("<p>Join queue</p>");
+                    out.print("<form><input type='text' name='comment' placeholder='Write comment here'><input type='submit' value='" + request.getParameter("openQueue") + "' name='addToQueue' /></form>");
+                }
+                else{
+                    out.print("<p>Leave queue</p>");
+                    out.print("<form><input type='submit' value='" + request.getParameter("openQueue") + "' name='removeFromQueue' /></form>");
+                }
             %>
         
     </body>

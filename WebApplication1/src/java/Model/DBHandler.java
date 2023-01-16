@@ -115,7 +115,8 @@ public class DBHandler {
     
     //comment may be an empty string
     public static void addUserToQueue(String pin, Integer id, String location, String comment) {
-        String query = "INSERT INTO Users VALUES ('"+pin+"', "+id+", '"+location+"','"+comment+"')";
+        String query = "Insert into queue (pin, activity_ID, location, comment) values ('" + pin + "', "+ id +", '" + location +"', '" + comment + "')";
+        
         dbVoidCall(query);
     }
 
@@ -154,7 +155,7 @@ public class DBHandler {
     }*/
     
         public static List<QueueSpot> getAllQueues(Integer id){
-        String query = "select Queue.id,Activity_id,Queue.pin from Queue INNER JOIN users ON Queue.pin=Users.pin WHERE queue.Activity_id="+id+" ORDER BY id ASC";
+        String query = "select * from Queue INNER JOIN users ON Queue.pin=Users.pin WHERE queue.Activity_id="+id+" ORDER BY id ASC";
         return dbQueueSpot(query);
     }
     

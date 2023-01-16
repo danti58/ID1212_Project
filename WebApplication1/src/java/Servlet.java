@@ -122,16 +122,22 @@ public class Servlet extends HttpServlet {
             }else if(request.getParameter("addToQueue") != null){
                 
                 //Database Add user to queue with comment
+                ub.addUserToQueue(ub.getCurrentUser().getPin(), Integer.parseInt(request.getParameter("addToQueue")) , "", request.getParameter("comment"));
+                ub.getCurrentUser().setUserIsInQueue(true);
                 
-                RequestDispatcher rd = request.getRequestDispatcher("View/queue.jsp");
+                
+                RequestDispatcher rd = request.getRequestDispatcher("View/allActivites.jsp");
                 rd.forward(request, response);  
             }else if(request.getParameter("removeFromQueue") != null){
                 
                 //Database remove from queue
+                ub.removeUserFromQueue(ub.getCurrentUser().getPin(), Integer.parseInt(request.getParameter("removeFromQueue")));
+                ub.getCurrentUser().setUserIsInQueue(false);
                 
-                RequestDispatcher rd = request.getRequestDispatcher("View/queue.jsp");
+                RequestDispatcher rd = request.getRequestDispatcher("View/allActivites.jsp");
                 rd.forward(request, response);  
             }else if(request.getParameter("openQueue") != null){
+                response.setHeader("Refresh", "10; URL=/WebApplication/Servlet?openQueue=" + request.getParameter("openQueue"));
                 RequestDispatcher rd = request.getRequestDispatcher("View/queue.jsp");
                 rd.forward(request, response);  
             } else if(request.getParameter("allActivites") != null) {

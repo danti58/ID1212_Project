@@ -34,6 +34,7 @@ public class UseBean {
         boolean success = false;
         if(authentication(PIN, password)){
             this.user = DBHandler.getUser(PIN);
+            this.user.setUserIsInQueue(isUserInQueue(PIN));
             success = true;
         }
         
@@ -47,6 +48,7 @@ public class UseBean {
             DBHandler.createUser(pin, username, admin, password);
             if(DBHandler.findUser(pin)){
                 this.user = new User(pin, username, admin, password); 
+                this.user.setUserIsInQueue(false);
                 success = true;
             }
         }
@@ -72,9 +74,9 @@ public class UseBean {
         return DBHandler.isAdminInQueue(pin, id);
     }
     
-    /*public User getUser(String pin){
+    public User getUser(String pin){
         return DBHandler.getUser(pin);
-    }*/
+    }
      
     public String getUserPIN(String userName){
         return DBHandler.getUserPin(userName);

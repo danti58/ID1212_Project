@@ -18,10 +18,11 @@
             <input type='submit' value='Delete account' name='deleteUser' />
             <input type='submit' value='Select Activity' name='allActivites' />
             <%
+                /*
                 if(ub.getCurrentUser().getAdmin()){
                     out.print("<input type='submit' value='Set Admin' name='setAdmin' />");
                     out.print("<input type='submit' value='Delete Admin' name='removeAdmin' />");
-                }
+                }*/
             %>
             
             
