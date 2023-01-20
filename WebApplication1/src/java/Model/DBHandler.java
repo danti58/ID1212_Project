@@ -163,6 +163,10 @@ public class DBHandler {
         String query = "SELECT * from Queue WHERE Pin='"+pin+"'";
         return dbFind(query);
     }
+    public static boolean isUserInCurrentQueue(String pin, Integer id){
+        String query = "SELECT * from Queue WHERE Pin='"+pin+"' AND ACTIVITY_ID=" + id;
+        return dbFind(query);
+    }
     public static boolean findUser(String pin){
         String query = "SELECT * from Users WHERE Pin='"+pin+"'";
         return dbFind(query);

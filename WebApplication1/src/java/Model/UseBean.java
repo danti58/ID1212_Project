@@ -109,17 +109,15 @@ public class UseBean {
         return DBHandler.isUserInQueue(pin);
     }
     
-    /*public List<String> getAllActivities(){
-        return DBHandler.getAllActivities();
-    }*/
+    public boolean isUserInCurrentQueue(String pin, Integer id){
+        return DBHandler.isUserInCurrentQueue(pin, id);
+    }
+    
     
     public List<Activity> getAllActivities(){
         return DBHandler.getAllActivities();
     }
-    
-    /*public List<String> getAllQueues(Integer activityID){
-        return DBHandler.getAllQueues(activityID);
-    }*/
+
     public List<QueueSpot> getAllQueues(Integer activityID){
         return DBHandler.getAllQueues(activityID);
     }

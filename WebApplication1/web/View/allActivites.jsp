@@ -17,24 +17,20 @@
             <input type='submit' value='Logout' name='signOut' />
             <input type='submit' value='Delete account' name='deleteUser' />
             <%
-                /*
-                if(ub.getCurrentUser().getAdmin()){
-                    out.print("<input type='submit' value='Set Admin' name='setAdmin' />");
-                    out.print("<input type='submit' value='Delete Admin' name='removeAdmin' />");
-                }*/
+                
 
             %>
         </form>
         <h1>Hello World!</h1>
         
-        <form>
+        
             <%
                 
                 for(int i = 0; i < ub.getAllActivities().size();i++){
-                    out.print("<p>" + ub.getAllActivities().get(i).getName() + "<input type='submit' value='" +  ub.getAllActivities().get(i).getId() + "' name='openQueue' />");
+                    out.print("<form><input type='hidden' value='" +  ub.getAllActivities().get(i).getId() + "' name='openQueue'><input type='submit' value='" +  ub.getAllActivities().get(i).getName() + "'  /></form>");//name='openQueue'
                     
                 }
             %>
-        </form>
+        
     </body>
 </html>

@@ -18,7 +18,7 @@
             <input type='submit' value='Delete account' name='deleteUser' />
             <input type='submit' value='Select Activity' name='allActivites' />
         </form>
-        <form>
+        
         <%
             //Borde vara rätt kod för att uppdatera, kanske borde vara i servlet
             //response.setHeader("Refresh", "0; URL=request.getContextPath()");
@@ -26,49 +26,62 @@
             //response.setHeader("Refresh", "3; URL=request.getContextPath()");
             
             if(ub.getCurrentUser().getAdmin()){
-                out.print("<p>SetAdmin<input type='submit' value='"+ request.getParameter("openQueue") + "' name='setAdmin' />");
-                out.print("<p>deleteAdmin<input type='submit' value='"+ request.getParameter("openQueue") + "' name='removeAdmin' />");
-                out.print("<p>Message<input type='submit' value='" + request.getParameter("openQueue") +"' name='Message' />");
+                out.print("<form><input type='hidden' value='"+ request.getParameter("openQueue") + "' name='setAdmin' /><input type='submit' value='Set Admin' /></form>");
+                out.print("<form><input type='hidden' value='"+ request.getParameter("openQueue") + "' name='removeAdmin' /><input type='submit' value='Remove Admin' /></form>");
+                out.print("<form><input type='hidden' value='"+ request.getParameter("openQueue") + "' name='sendMessage' /><input type='submit' value='Send Message to Queue' /></form>");
             }
         %>
-        </form>
-        <h1>Hello World!</h1>
+        
+        <h1>Queue</h1>
         
         <%
             for(int i = 0; i < ub.getAllQueues(Integer.parseInt(request.getParameter("openQueue"))).size(); i++){
                 
-                if(ub.getAllQueues(Integer.parseInt(request.getParameter("openQueue"))).get(i).getPin().equals(ub.getCurrentUser().getPin())){
-                    out.print("<h1>" + ub.getUser(ub.getAllQueues(Integer.parseInt(request.getParameter("openQueue"))).get(i).getPin()).getUsername() + " " + ub.getAllQueues(Integer.parseInt(request.getParameter("openQueue"))).get(i).getComment() + "</h1>");
+                if(ub.getCurrentUser().getAdmin()){
+                    if(ub.getAllQueues(Integer.parseInt(request.getParameter("openQueue"))).get(i).getPin().equals(ub.getCurrentUser().getPin())){
+                    out.print("<p style='color:green; display: inline-block;'>" + ub.getUser(ub.getAllQueues(Integer.parseInt(request.getParameter("openQueue"))).get(i).getPin()).getUsername() + "</p><p style='display: inline-block;' >: " + ub.getAllQueues(Integer.parseInt(request.getParameter("openQueue"))).get(i).getComment() + "</p><form style='display: inline-block;' ><input type='hidden' value='" + ub.getAllQueues(Integer.parseInt(request.getParameter("openQueue"))).get(i).getPin() + "' name='removeUserFromQueue' /><input type='hidden' value='" + request.getParameter("openQueue") +"' name='queueID' /><input type='submit' value='Remove' /></form>");
                     
-                }
-                else {
-                    out.print("<p>" + ub.getUser(ub.getAllQueues(Integer.parseInt(request.getParameter("openQueue"))).get(i).getPin()).getUsername() + " " + ub.getAllQueues(Integer.parseInt(request.getParameter("openQueue"))).get(i).getComment() +  "</p>");
-                }
-                
-                //Funkar inte med PIN vs username
-                /*
-                if(ub.isUserInQueue(ub.getAllUsers().get(i))){
-                    if(ub.getAllUsers().get(i) == ub.getCurrentUser().get){
-                        out.print("<h1>" + ub.getCurrentUser().getUsername() +"</h1>");
                     }
                     else {
-                        out.print(ub.getAllUsers().get(i));
+                        out.print("<div><p style='color:blue; display: inline-block; '>" + ub.getUser(ub.getAllQueues(Integer.parseInt(request.getParameter("openQueue"))).get(i).getPin()).getUsername() + "</p><p style='display: inline-block; '>: " + ub.getAllQueues(Integer.parseInt(request.getParameter("openQueue"))).get(i).getComment() + "</p><form style='display: inline-block;' ><input type='hidden' value='" + ub.getAllQueues(Integer.parseInt(request.getParameter("openQueue"))).get(i).getPin() + "' name='removeUserFromQueue' /><input type='hidden' value='" + request.getParameter("openQueue") +"' name='queueID' /><input type='submit' value='Remove' /></form>");
                     }
                 }
-                */
+                
+                else{
+                    if(ub.getAllQueues(Integer.parseInt(request.getParameter("openQueue"))).get(i).getPin().equals(ub.getCurrentUser().getPin())){
+                    out.print("<p style='color:green; display: inline-block;'>" + ub.getUser(ub.getAllQueues(Integer.parseInt(request.getParameter("openQueue"))).get(i).getPin()).getUsername() + "</p><p style='display: inline-block;' >: " + ub.getAllQueues(Integer.parseInt(request.getParameter("openQueue"))).get(i).getComment() + "</p>");
+                    
+                    }
+                    else {
+                        out.print("<div><p style='color:blue; display: inline-block; '>" + ub.getUser(ub.getAllQueues(Integer.parseInt(request.getParameter("openQueue"))).get(i).getPin()).getUsername() + "</p><p style='display: inline-block; '>: " + ub.getAllQueues(Integer.parseInt(request.getParameter("openQueue"))).get(i).getComment() + "</p></div>");
+                    } 
+                }
+                
+               
             }
            
         %>
         
         
             <%
-                if(!ub.getCurrentUser().getUserIsInQueue()){
-                    out.print("<p>Join queue</p>");
-                    out.print("<form><input type='text' name='comment' placeholder='Write comment here'><input type='submit' value='" + request.getParameter("openQueue") + "' name='addToQueue' /></form>");
+                if(ub.isUserInCurrentQueue(ub.getCurrentUser().getPin(), Integer.parseInt(request.getParameter("openQueue")))){
+                    
+                    out.print("<form><input type='hidden' value='" + request.getParameter("openQueue") + "' name='removeFromQueue' /><input type='submit' value='Leave queue' /></form>");
+                    
+                    /*if(!ub.getCurrentUser().getUserIsInQueue()){
+                        
+                    }   
+                    else{
+                        out.print("<form><input type='hidden' value='" + request.getParameter("openQueue") + "' name='removeFromQueue' /><input type='submit' value='Leave queue' /></form>");
+                    }*/
                 }
-                else{
-                    out.print("<p>Leave queue</p>");
-                    out.print("<form><input type='submit' value='" + request.getParameter("openQueue") + "' name='removeFromQueue' /></form>");
+                else {
+                    if(ub.getCurrentUser().getUserIsInQueue() ){
+                        out.print("<h1 style='color:red;'>Leave current queue before joining a new one</h1>");
+                    }
+                    else {
+                        out.print("<form><input type='hidden' value='" + request.getParameter("openQueue") + "' name='addToQueue' /><input type='text' name='comment' placeholder='Write comment here' /><input type='submit' value='Join queue' /></form>");
+                    }
                 }
             %>
         
