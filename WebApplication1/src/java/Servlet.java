@@ -156,6 +156,11 @@ public class Servlet extends HttpServlet {
                 RequestDispatcher rd = request.getRequestDispatcher("View/queue.jsp");
                 rd.forward(request, response);  
             } else if(request.getParameter("allActivites") != null) {
+                 RequestDispatcher rd = request.getRequestDispatcher("View/allActivites.jsp");
+                rd.forward(request, response);
+            }else if(request.getParameter("removeUserFromQueue") != null) {
+                ub.removeUserFromQueue(request.getParameter("removeUserFromQueue"), Integer.parseInt(request.getParameter("queueID")));
+
                 RequestDispatcher rd = request.getRequestDispatcher("View/allActivites.jsp");
                 rd.forward(request, response);
             }else {
