@@ -12,6 +12,16 @@
     </head>
     <body>
         <h1>Welcome to O'Laoghaires!</h1>
-        <<h2>Please sign in</h2>
+        <h2>Please sign in</h2>
+        
+        <form method='GET'>
+            <p>PIN <input type='text' name='PIN' />
+            <p>Password <input type='text' name='password' /><br>
+            <input type='submit' value='Submit'>
+            
+        </form>
+        
+        <form><input type='submit' value='SignUp' name='createUser'></form>
+        
     </body>
 </html>

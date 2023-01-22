@@ -17,7 +17,7 @@ import javax.sql.DataSource;
 public class DBHandler {
 
     public static User getUser(String pin) {
-        String query = "SELECT * FROM Users WHERE Pin='"+pin;
+        String query = "SELECT * FROM Users WHERE Pin='"+pin+"'";
         User user = new User();
         
         Statement stmt = null;
@@ -52,9 +52,44 @@ public class DBHandler {
         String query = "INSERT INTO Users VALUES ('"+pin+"', '"+username+"', '"+admin+"','"+password+"')";
         dbVoidCall(query);
     }
+    
+    public static String getUserPin(String userName){
+        String query = "SELECT * FROM Users where userName='" + userName +"'";
+        
+        String re;
+        
+        Statement stmt = null;
+        Connection conn = null;
+        
+        try{
+            Context initContext = new InitialContext();
+            Context envContext  = (Context)initContext.lookup("java:/comp/env");
+
+            DataSource ds = (DataSource)envContext.lookup("jdbc/derby");
+            conn = ds.getConnection();
+            stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            
+            while (rs.next()) {
+                re = rs.getString("userName");
+            }
+            
+            
+            
+        }catch(Exception e){
+            e.printStackTrace();
+        } finally {
+            try {
+		stmt.close();
+		conn.close();
+            } catch (Exception e) {}
+        }
+        return null;
+    }
 
     public static void deleteUser(String pin) {
         String query = "DELETE FROM Users WHERE Pin='"+pin+"'";
+        dbVoidCall(query);
     }
 
     public static void addAdmin(String pin, Integer id) {
@@ -67,25 +102,36 @@ public class DBHandler {
         dbVoidCall(query);
     }
     
-    public static boolean isAdmin(String pin, Integer id) {
-        String query = "SELECT FROM Admins WHERE Pin = '"+pin+"' AND Activity_id="+id;
+    public static boolean isAdmin(String pin /*, Integer id*/) {
+        //String query = "SELECT FROM Admins WHERE Pin = '"+pin+"' AND Activity_id="+id;
+        String query = "SELECT * FROM Users WHERE Pin = '" + pin + "' AND Admin = True";
+        return dbFind(query);
+    }
+    
+    public static boolean isAdminInQueue(String pin , Integer id) {
+        String query = "SELECT * FROM Admins WHERE Pin = '"+pin+"' AND Activity_id="+id;
         return dbFind(query);
     }
     
     //comment may be an empty string
     public static void addUserToQueue(String pin, Integer id, String location, String comment) {
-        String query = "INSERT INTO Users VALUES ('"+pin+"', "+id+", '"+location+"','"+comment+"')";
+        String query = "Insert into queue (pin, activity_ID, location, comment) values ('" + pin + "', "+ id +", '" + location +"', '" + comment + "')";
+        
         dbVoidCall(query);
     }
 
     public static void removeUserFromQueue(String pin, Integer id) {
         String query = "DELETE FROM Queue WHERE Pin='"+pin+"' AND Activity_id="+id;
+        dbVoidCall(query);
     }
 
     public static void updateQueueStatus(Integer id, boolean status) {
-        String query = "SELECT * Activity WHERE id="+id;
-        dbUpdate(query, id, "status", status);
-        
+        String query = "UPDATE Activity SET Status = '"+status+"' WHERE id="+id;
+        dbVoidCall(query);
+    }
+    public static void toggleQueueStatus(Integer id) {
+        String query = "UPDATE ACTIVITY set status = NOT status WHERE id ="+id;
+        dbVoidCall(query);
     }
 
     public static boolean authentication(String pin, String password) {
@@ -97,15 +143,38 @@ public class DBHandler {
         String query = "select * from users";
         return dbUser(query);
     }
+    
     public static List<Activity> getAllActivities(){
         String query = "select * from activity";
         return dbActivity(query);
     }
-    public static List<QueueSpot> getAllQueues(Integer id){
-        String query = "select Queue.id,Activity_id,Queue.pin from Queue INNER JOIN users ON Queue.pin=Users.pin WHERE queue.Activity_id="+id+" ORDER BY id ASC";
-        return dbQueueSpot(query);
+    
+    public static void setActivityMessage(String message, Integer id){
+        String query = "UPDATE Activity SET message = '"+message+"' WHERE id="+id;
+        dbVoidCall(query);
     }
     
+    public static String getActivityMessage(Integer id){
+        String query = "select * from activity WHERE id="+id;
+        return dbActivity(query).get(0).getMessage();
+    }
+    /*public static List<String> getAllActivities(){
+        String query = "select * from activity";
+        return dbListCall(query, "name");
+    }*/
+    /*public static List<String> getAllQueues(Integer id){
+        String query = "select Queue.id,Activity_id,Queue.pin from Queue INNER JOIN users ON Queue.pin=Users.pin WHERE queue.Activity_id="+id+" ORDER BY id ASC";
+        return dbListCall(query, "username");
+    }*/
+    
+    public static List<QueueSpot> getAllQueues(Integer id){
+        String query = "select * from Queue INNER JOIN users ON Queue.pin=Users.pin WHERE queue.Activity_id="+id+" ORDER BY id ASC";
+        return dbQueueSpot(query);
+    }
+     public static boolean isUserInCurrentQueue(String pin, Integer id){
+        String query = "SELECT * from Queue WHERE Pin='"+pin+"' AND ACTIVITY_ID=" + id;
+        return dbFind(query);
+    }
     public static boolean isUserInQueue(String pin){
         String query = "SELECT * from Queue WHERE Pin='"+pin+"'";
         return dbFind(query);
@@ -143,9 +212,8 @@ public class DBHandler {
         return false;
     }
     
-    private static List<Activity> dbActivity(String query){
-        List<Activity> list  = new ArrayList<Activity>();
-        Activity a = new Activity();
+    private static List<String> dbListCall(String query, String getObject){
+        List<String> list  = new ArrayList<String>();
         
         Statement stmt = null;
         Connection conn = null;
@@ -160,8 +228,7 @@ public class DBHandler {
             ResultSet rs = stmt.executeQuery(query);
             
             while (rs.next()) {
-                a = new Activity(rs.getInt("id"), rs.getString("name"), rs.getBoolean("status"));
-                list.add(a);  
+                list.add(rs.getString(getObject));  
             }
             
         }catch(Exception e){
@@ -185,7 +252,7 @@ public class DBHandler {
             DataSource ds = (DataSource)envContext.lookup("jdbc/derby");
             conn = ds.getConnection();
             stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery(query);
+            stmt.executeUpdate(query);
   
         }catch(Exception e){
             e.printStackTrace();
@@ -195,40 +262,8 @@ public class DBHandler {
 		conn.close();
             } catch (Exception e) {}
         }
-    }   
-    private static void dbUpdate(String query, Integer id, String update, boolean value){
-       
-        
-        Statement stmt = null;
-        Connection conn = null;
-        
-        try{
-            Context initContext = new InitialContext();
-            Context envContext  = (Context)initContext.lookup("java:/comp/env");
-
-            DataSource ds = (DataSource)envContext.lookup("jdbc/derby");
-            conn = ds.getConnection();
-            stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery(query);
-            
-            while(rs.next()) {
-                if(rs.getInt("ID")== id) {
-                   //Updating
-                   rs.updateBoolean(update, value);
-                   //Updating the row
-                   rs.updateRow();
-                }
-            }
-            
-        }catch(Exception e){
-            e.printStackTrace();
-        } finally {
-            try {
-		stmt.close();
-		conn.close();
-            } catch (Exception e) {}
-        }
     }
+
     private static List <User> dbUser(String query){
          List<User> list  = new ArrayList<User>();
         User user = new User();
@@ -260,7 +295,8 @@ public class DBHandler {
         }
         return list;
     }
-    private static List <QueueSpot> dbQueueSpot(String query){
+    
+     private static List <QueueSpot> dbQueueSpot(String query){
          List<QueueSpot> list  = new ArrayList<QueueSpot>();
         QueueSpot qs = new QueueSpot();
         
@@ -279,6 +315,38 @@ public class DBHandler {
             while (rs.next()) {
                 qs = new QueueSpot(rs.getString("pin"), rs.getInt("activity_id"), rs.getString("location"), rs.getString("comment"));
                 list.add(qs);
+            }
+            
+        }catch(Exception e){
+            e.printStackTrace();
+        } finally {
+            try {
+		stmt.close();
+		conn.close();
+            } catch (Exception e) {}
+        }
+        return list;
+    }
+     
+     private static List<Activity> dbActivity(String query){
+        List<Activity> list  = new ArrayList<Activity>();
+        Activity a = new Activity();
+        
+        Statement stmt = null;
+        Connection conn = null;
+        
+        try{
+            Context initContext = new InitialContext();
+            Context envContext  = (Context)initContext.lookup("java:/comp/env");
+
+            DataSource ds = (DataSource)envContext.lookup("jdbc/derby");
+            conn = ds.getConnection();
+            stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            
+            while (rs.next()) {
+                a = new Activity(rs.getInt("id"), rs.getString("name"), rs.getBoolean("status"), rs.getString("message"));
+                list.add(a);  
             }
             
         }catch(Exception e){

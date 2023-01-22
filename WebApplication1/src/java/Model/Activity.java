@@ -9,13 +9,15 @@ public class Activity {
     private Integer id;
     private String name;
     private boolean status;
+    private String message;
     
     public Activity(){
     }
-    public Activity(Integer id, String name, boolean status){
+    public Activity(Integer id, String name, boolean status, String message){
         this.id = id;
         this.name = name;
         this.status = status;
+        this.message = message;
     }
 
     public Integer getId(){
@@ -26,5 +28,11 @@ public class Activity {
     }
     public boolean getstatus(){
         return this.status;
+    }
+    public String getMessage(){
+        return this.message;
+    }
+    public String setMessage(){
+        return this.message;
     }
 }

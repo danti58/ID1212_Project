@@ -1,6 +1,7 @@
 <%-- 
-    Document   : allActivities
-    Created on : 2023-jan-12, 21:27:26
+    Document   : sendMessage
+    Created on : 2023-jan-16, 15:04:43
+    Author     : Amanda
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
